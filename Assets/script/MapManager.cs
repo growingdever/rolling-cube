@@ -24,7 +24,7 @@ public class MapManager : MonoBehaviour {
 	public GameObject FloorBlock1;
 	public GameObject FloorBlock2;
 
-	private bool _isMoving;
+	private bool _isMoving = false;
 
 	// Use this for initialization
 	void Start () {
@@ -62,27 +62,7 @@ public class MapManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown ("w")) {
 
-		} else if (Input.GetKeyDown ("a")) {
-
-		} else if (Input.GetKeyDown ("s")) {
-			
-		} else if (Input.GetKeyDown ("d")) {
-
-		}
-
-		if( Input.GetKeyUp("w") ) {
-			MovePlayer(DIR_BOTTOM);
-		} else if( Input.GetKeyUp("a") ) {
-			MovePlayer(DIR_LEFT);
-		} else if( Input.GetKeyUp("s") ) {
-			MovePlayer(DIR_TOP);
-		} else if( Input.GetKeyUp("d") ) {
-			MovePlayer(DIR_RIGHT);
-		} else if( Input.GetKeyUp("space") ) {
-			AddEnemy();
-		}
 	}
 
 
@@ -121,6 +101,10 @@ public class MapManager : MonoBehaviour {
 	}
 	
 	public void MovePlayer(int dir) {
+		Debug.Log(_isMoving + "");
+		if( _isMoving )
+			return;
+
 		_player.SetDirection(dir);
 		TileCoordinate coord = _player.GetNextCoordinate();
 		if( ! IsValidCoordinate(coord._x, coord._y) )
@@ -128,6 +112,11 @@ public class MapManager : MonoBehaviour {
 		
 		MoveTileMapObject();
 		_isMoving = true;
+		Invoke("MoveFinish", 1.1f);
+	}
+
+	public void MoveFinish() {
+		_isMoving = false;
 	}
 	
 	public void CheckMap() {
