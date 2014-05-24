@@ -24,7 +24,10 @@ public class MapManager : MonoBehaviour {
 	public GameObject FloorBlock1;
 	public GameObject FloorBlock2;
 
+	public float MoveTime = 0.5f;
 	private bool _isMoving = false;
+	private int _nowTurnCount = 0;
+	private RandomGenerator _randomer;
 
 	// Use this for initialization
 	void Start () {
@@ -58,6 +61,10 @@ public class MapManager : MonoBehaviour {
 				}
 			}
 		}
+
+		_randomer = new RandomGenerator();
+		_randomer.AddRange( new RandomGenerator.Range(-5, -3) );
+		_randomer.AddRange( new RandomGenerator.Range(7, 9) );
 	}
 	
 	// Update is called once per frame
@@ -84,7 +91,7 @@ public class MapManager : MonoBehaviour {
 					iTween.MoveTo( obj.GetModel(), 
 						iTween.Hash( 
 						"position", dest, 
-						"time", 1.0f,
+						"time", MoveTime,
 						"easetype", iTween.EaseType.easeOutCubic
 					) );
 					break;
@@ -92,7 +99,7 @@ public class MapManager : MonoBehaviour {
 					iTween.MoveTo( obj.GetModel(), 
 						iTween.Hash( 
 						"position", dest, 
-						"time", 1.0f,
+						"time", MoveTime,
 						"easetype", iTween.EaseType.easeOutCubic
 					) );
 					break;
@@ -111,7 +118,11 @@ public class MapManager : MonoBehaviour {
 		
 		MoveTileMapObject();
 		_isMoving = true;
-		Invoke("MoveFinish", 1.1f);
+		Invoke("MoveFinish", MoveTime);
+		_nowTurnCount++;
+		if( _nowTurnCount % 2 == 0 ) {
+			AddEnemy();
+		}
 	}
 
 	public void MoveFinish() {
@@ -140,12 +151,31 @@ public class MapManager : MonoBehaviour {
 	}
 
 	public void AddEnemy() {
+
+		int x, y, dir;
+		int v = _randomer.NextInt();
+		if( Random.Range(0, 2) == 0 ) {
+			x = v;
+			y = Random.Range(0, MAP_HEIGHT);
+			if( v < 0 )
+				dir = DIR_RIGHT;
+			else
+				dir = DIR_LEFT;
+		} else {
+			x = Random.Range(0, MAP_WIDTH);
+			y = v;
+			if( v < 0 )
+				dir = DIR_BOTTOM;
+			else
+				dir = DIR_TOP;
+		}
+
 		GameObject clone = Instantiate (EnemyPrefab,
 			new Vector3 (0, 1, 0),
 			Quaternion.identity) as GameObject;
 		Missile missile = new Missile(clone,
-			new TileCoordinate(Random.Range(0, 4), Random.Range(0, 4)),
-			Random.Range (0, 3));
+			new TileCoordinate(x, y),
+			dir);
 		_movableObjects.Add(missile);
 	}
 	
