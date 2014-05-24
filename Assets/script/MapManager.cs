@@ -101,7 +101,6 @@ public class MapManager : MonoBehaviour {
 	}
 	
 	public void MovePlayer(int dir) {
-		Debug.Log(_isMoving + "");
 		if( _isMoving )
 			return;
 
