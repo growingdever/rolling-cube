@@ -127,10 +127,17 @@ public class MapManager : MonoBehaviour {
 
 	public void MoveFinish() {
 		_isMoving = false;
+		CheckMap();
 	}
 	
 	public void CheckMap() {
-		
+		TileCoordinate playerCoord = _player.GetCurrCoordinate();
+		foreach( MovableTileMapObject obj in _movableObjects ) {
+			if( obj.GetType() == TYPE_ENEMY
+				&& obj.GetCurrCoordinate().equal( playerCoord ) ) {
+				GameOver();
+			}
+		}
 	}
 	
 	public bool IsValidCoordinate(int x, int y) {
@@ -147,7 +154,7 @@ public class MapManager : MonoBehaviour {
 	}
 	
 	public void GameOver() {
-		
+		Debug.Log("Game Over");
 	}
 
 	public void AddEnemy() {
