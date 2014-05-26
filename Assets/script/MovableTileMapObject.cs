@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MovableTileMapObject {
+public class MovableTileMapObject : MonoBehaviour {
 	private int _type;
     protected TileCoordinate _coord;
     protected int _moveDir;
@@ -24,7 +24,7 @@ public class MovableTileMapObject {
 		return _model;
 	}
 
-    public void Move() {
+    public virtual void Move() {
         switch( _moveDir ) {
             case MapManager.DIR_LEFT:
                 _coord._x -= 1;

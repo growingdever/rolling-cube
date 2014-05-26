@@ -88,12 +88,12 @@ public class MapManager : MonoBehaviour {
 			Vector3 dest = new Vector3(currCoord._x, 1, currCoord._y);
 			switch( obj.GetType() ) {
 				case TYPE_PLAYER:
-					iTween.MoveTo( obj.GetModel(), 
-						iTween.Hash( 
-						"position", dest, 
-						"time", MoveTime,
-						"easetype", iTween.EaseType.easeOutCubic
-					) );
+					// iTween.MoveTo( obj.GetModel(), 
+					// 	iTween.Hash( 
+					// 	"position", dest, 
+					// 	"time", MoveTime,
+					// 	"easetype", iTween.EaseType.easeOutCubic
+					// ) );
 					break;
 				case TYPE_ENEMY:
 					iTween.MoveTo( obj.GetModel(), 
@@ -115,6 +115,8 @@ public class MapManager : MonoBehaviour {
 		TileCoordinate coord = _player.GetNextCoordinate();
 		if( ! IsValidCoordinate(coord._x, coord._y) )
 			return;
+
+		_player.Move();
 		
 		MoveTileMapObject();
 		_isMoving = true;
