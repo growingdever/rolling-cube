@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MovableTileMapObject : MonoBehaviour {
-	private int _type;
+public class MovableTileMapObject {
+	public enum Type {
+		Player,
+		Enemy
+	};
+	private Type _type;
     protected TileCoordinate _coord;
     protected int _moveDir;
 	protected GameObject _model;
 
-    public MovableTileMapObject(int type, GameObject model, TileCoordinate coord)
+    public MovableTileMapObject(Type type, GameObject model, TileCoordinate coord)
 		: base() {
         _type = type;
         _model = model;
@@ -16,7 +20,7 @@ public class MovableTileMapObject : MonoBehaviour {
         _model.transform.position = new Vector3(_coord._x, 1, _coord._y);
     }
 
-    public int GetType() {
+	public Type GetType() {
         return _type;
     }
 

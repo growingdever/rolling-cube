@@ -1,6 +1,6 @@
 private var ismoving : boolean = false;  
 private var startY : float = 1;  
-var cubeSpeed : float = 0.7;
+var cubeSpeed : float = 0.5;
 var cubeSize : float = 1;
   
 function rollSetup(dir){  

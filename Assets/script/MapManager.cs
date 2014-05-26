@@ -9,9 +9,6 @@ public class MapManager : MonoBehaviour {
 	public const int DIR_RIGHT = 2;
 	public const int DIR_BOTTOM = 3;
 	
-	public const int TYPE_PLAYER = 1;
-	public const int TYPE_ENEMY = 2;
-	
 	public const int MAP_WIDTH = 5;
 	public const int MAP_HEIGHT = 5;
 	private int[,] _map;
@@ -40,10 +37,17 @@ public class MapManager : MonoBehaviour {
 			Quaternion.identity) as GameObject;
 		_player = new Player (playerGameObject, 
 			new TileCoordinate(MAP_WIDTH/2, MAP_HEIGHT/2) );
-
-
 		_movableObjects.Add (_player);
 
+		//make targetpoint as child of player's cube
+		GameObject targetpoint = new GameObject("targetpoint");
+		targetpoint.transform.parent = playerGameObject.transform;
+		targetpoint.transform.Translate(playerGameObject.transform.position);
+		playerGameObject.AddComponent("RollCube");
+		targetpoint.AddComponent("targetPointRotation");
+
+
+		// Generate floor blocks
 		int i, j;
 		for (i = 0; i < 5; i ++) {
 			for (j = 0; j < 5; j++) {
@@ -87,15 +91,10 @@ public class MapManager : MonoBehaviour {
 
 			Vector3 dest = new Vector3(currCoord._x, 1, currCoord._y);
 			switch( obj.GetType() ) {
-				case TYPE_PLAYER:
-					// iTween.MoveTo( obj.GetModel(), 
-					// 	iTween.Hash( 
-					// 	"position", dest, 
-					// 	"time", MoveTime,
-					// 	"easetype", iTween.EaseType.easeOutCubic
-					// ) );
+				case MovableTileMapObject.Type.Player:
+					// not animating on here
 					break;
-				case TYPE_ENEMY:
+				case MovableTileMapObject.Type.Enemy:
 					iTween.MoveTo( obj.GetModel(), 
 						iTween.Hash( 
 						"position", dest, 
@@ -116,9 +115,11 @@ public class MapManager : MonoBehaviour {
 		if( ! IsValidCoordinate(coord._x, coord._y) )
 			return;
 
-		_player.Move();
-		
 		MoveTileMapObject();
+
+		// move player on here
+		GameObject.Find("prefab-player(Clone)").SendMessage("rollSetup", dir);
+
 		_isMoving = true;
 		Invoke("MoveFinish", MoveTime);
 		_nowTurnCount++;
@@ -135,7 +136,7 @@ public class MapManager : MonoBehaviour {
 	public void CheckMap() {
 		TileCoordinate playerCoord = _player.GetCurrCoordinate();
 		foreach( MovableTileMapObject obj in _movableObjects ) {
-			if( obj.GetType() == TYPE_ENEMY
+			if( obj.GetType() == MovableTileMapObject.Type.Enemy
 				&& obj.GetCurrCoordinate().equal( playerCoord ) ) {
 				GameOver();
 			}
