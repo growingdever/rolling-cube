@@ -9,6 +9,7 @@ public class MapManager : MonoBehaviour {
 		Top,
 		Right,
 		Bottom,
+		Stop,
 	};
 
 	public const int MAP_WIDTH = 5;
@@ -25,7 +26,7 @@ public class MapManager : MonoBehaviour {
 	public GameObject FloorBlock1;
 	public GameObject FloorBlock2;
 
-	public float MoveTime = 0.5f;
+	public const float MoveTime = 0.5f;
 	private bool _isMoving = false;
 	private int _nowTurnCount = 0;
 	private RandomGenerator _randomer;
@@ -125,21 +126,6 @@ public class MapManager : MonoBehaviour {
 			TileCoordinate currCoord = obj.GetCurrCoordinate();
 			if( IsValidCoordinate(currCoord) )
 				_map[currCoord._y, currCoord._x] = 0;
-
-			Vector3 dest = new Vector3(currCoord._x, 1, currCoord._y);
-			switch( obj.GetType() ) {
-				case MovableTileMapObject.Type.Player:
-					// not animating on here
-					break;
-				case MovableTileMapObject.Type.Enemy:
-					iTween.MoveTo( obj.GetModel(), 
-						iTween.Hash( 
-						"position", dest, 
-						"time", MoveTime,
-						"easetype", iTween.EaseType.easeOutCubic
-					) );
-					break;
-			}
 		}
 	}
 	
@@ -235,10 +221,14 @@ public class MapManager : MonoBehaviour {
 			clone2.transform.parent = clone.transform;
 		}
 
-		EnemyMissile missile = new EnemyMissile(clone,
+		// EnemyMissile missile = new EnemyMissile(clone,
+		// 	new TileCoordinate(x, y),
+		// 	dir,
+		// 	length);
+		// _movableObjects.Add(missile);
+		EnemyDrop drop = new EnemyDrop(clone,
 			new TileCoordinate(x, y),
-			dir,
-			length);
-		_movableObjects.Add(missile);
+			2);
+		_movableObjects.Add(drop);
 	}
 }
