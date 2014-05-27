@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Missile : MovableTileMapObject {
+public class EnemyMissile : Enemy {
 
 	protected int _length;
 
-	public Missile(GameObject gameObject, TileCoordinate coord, int dir, int length)
-		: base(Type.Enemy, gameObject, coord) {
-		_moveDir = dir;
+	public EnemyMissile(GameObject gameObject, TileCoordinate coord, MapManager.MoveDirection dir, int length)
+		: base(EnemyType.Missile, gameObject, coord, dir) {
 		_length = length;
 	}
 }

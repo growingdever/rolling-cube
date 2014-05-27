@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 
 public class MapManager : MonoBehaviour {
+	public enum MoveDirection {
+		Left = 0,
+		Top,
+		Right,
+		Bottom,
+	};
 
-	public const int DIR_LEFT = 0;
-	public const int DIR_TOP = 1;
-	public const int DIR_RIGHT = 2;
-	public const int DIR_BOTTOM = 3;
-	
 	public const int MAP_WIDTH = 5;
 	public const int MAP_HEIGHT = 5;
 	private int[,] _map;
@@ -142,7 +143,7 @@ public class MapManager : MonoBehaviour {
 		}
 	}
 	
-	public void MovePlayer(int dir) {
+	public void MovePlayer(MapManager.MoveDirection dir) {
 		if( _isMoving )
 			return;
 
@@ -206,31 +207,7 @@ public class MapManager : MonoBehaviour {
 		Debug.Log("Game Over");
 	}
 
-	public void AddEnemy() {
-		// create enemy at random position
-		int x, y, dir;
-		int v = _randomer.NextInt();
-		if( Random.Range(0, 2) == 0 ) {
-			x = v;
-			y = Random.Range(0, MAP_HEIGHT);
-			if( v < 0 )
-				dir = DIR_RIGHT;
-			else
-				dir = DIR_LEFT;
-		} else {
-			x = Random.Range(0, MAP_WIDTH);
-			y = v;
-			if( v < 0 )
-				dir = DIR_BOTTOM;
-			else
-				dir = DIR_TOP;
-		}
-
-		int len = 2;
-		AddEnemy( x, y, dir, 0, len );
-	}
-
-	public void AddEnemy(int x, int y, int dir, int type, int length) {
+	public void AddEnemy(int x, int y, MoveDirection dir, int type, int length) {
 		GameObject clone = Instantiate (EnemyPrefab,
 			new Vector3 (0, 1, 0),
 			Quaternion.identity) as GameObject;
@@ -239,16 +216,16 @@ public class MapManager : MonoBehaviour {
 		for( int i = 1; i < length; i ++ ) {
 			Vector3 pos = new Vector3(0, 1, 0);
 			switch( dir ) {
-				case MapManager.DIR_LEFT:
+				case MoveDirection.Left:
 					pos.x = -i;
 					break;
-				case MapManager.DIR_RIGHT:
+				case MoveDirection.Right:
 					pos.x = i;
 					break;
-				case MapManager.DIR_TOP:
+				case MoveDirection.Top:
 					pos.z = i;
 					break;
-				case MapManager.DIR_BOTTOM:
+				case MoveDirection.Bottom:
 					pos.z = -i;
 					break;
 			}
@@ -258,11 +235,10 @@ public class MapManager : MonoBehaviour {
 			clone2.transform.parent = clone.transform;
 		}
 
-		Missile missile = new Missile(clone,
+		EnemyMissile missile = new EnemyMissile(clone,
 			new TileCoordinate(x, y),
 			dir,
 			length);
 		_movableObjects.Add(missile);
 	}
-	
 }
