@@ -180,12 +180,37 @@ public class MapManager : MonoBehaviour {
 				dir = DIR_TOP;
 		}
 
+		int len = 2;
 		GameObject clone = Instantiate (EnemyPrefab,
 			new Vector3 (0, 1, 0),
 			Quaternion.identity) as GameObject;
+		// create child like tail to head
+		for( int i = 1; i < len; i ++ ) {
+			Vector3 pos = new Vector3(0, 1, 0);
+			switch( dir ) {
+				case MapManager.DIR_LEFT:
+					pos.x = -i;
+					break;
+				case MapManager.DIR_RIGHT:
+					pos.x = i;
+					break;
+				case MapManager.DIR_TOP:
+					pos.z = i;
+					break;
+				case MapManager.DIR_BOTTOM:
+					pos.z = -i;
+					break;
+			}
+			GameObject clone2 = Instantiate (EnemyPrefab,
+				pos,
+				Quaternion.identity) as GameObject;
+			clone2.transform.parent = clone.transform;
+		}
+
 		Missile missile = new Missile(clone,
 			new TileCoordinate(x, y),
-			dir);
+			dir,
+		    len);
 		_movableObjects.Add(missile);
 	}
 	
