@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public class MapManager : MonoBehaviour {
 
@@ -12,6 +13,8 @@ public class MapManager : MonoBehaviour {
 	public const int MAP_WIDTH = 5;
 	public const int MAP_HEIGHT = 5;
 	private int[,] _map;
+
+	private List<EnemyData> _enemyDataList;
 
 	private List<MovableTileMapObject> _movableObjects;
     private Player _player;
@@ -44,7 +47,7 @@ public class MapManager : MonoBehaviour {
 		targetpoint.transform.parent = playerGameObject.transform;
 		targetpoint.transform.Translate(playerGameObject.transform.position);
 		playerGameObject.AddComponent("RollCube");
-		targetpoint.AddComponent("targetPointRotation");
+		targetpoint.AddComponent ("targetPointRotation");
 
 
 		// Generate floor blocks
@@ -69,6 +72,8 @@ public class MapManager : MonoBehaviour {
 		_randomer = new RandomGenerator();
 		_randomer.AddRange( new RandomGenerator.Range(-5, -3) );
 		_randomer.AddRange( new RandomGenerator.Range(7, 9) );
+
+		ReadMap();
 	}
 	
 	// Update is called once per frame
@@ -76,6 +81,37 @@ public class MapManager : MonoBehaviour {
 
 	}
 
+	public void ReadMap() {
+		TextAsset data = Resources.Load("data") as TextAsset;
+		string content = data.text;
+		using( StringReader reader = new StringReader( content ) ) {
+			_enemyDataList = new List<EnemyData>();
+			string line;
+			while( (line = reader.ReadLine()) != null ) {
+				string[] tokens = line.Split(' ');
+				int turn = int.Parse( tokens[0] );
+				int x = int.Parse( tokens[1] );
+				int y = int.Parse( tokens[2] );
+				int type = int.Parse( tokens[3] );
+
+				EnemyData d = new EnemyData( turn, x, y, type );
+				_enemyDataList.Add( d );
+			}
+		}
+
+		while(true) {
+			if( _enemyDataList.Count == 0 )
+				break;
+
+			EnemyData d = _enemyDataList[0];
+			if( d._turn == _nowTurnCount ) {
+				AddEnemy( d._x, d._y, 0, d._type, 2 );
+				_enemyDataList.RemoveAt(0);
+			} else {
+				break;
+			}
+		}
+	}
 
 	public void MoveTileMapObject() {
 		foreach( MovableTileMapObject obj in _movableObjects ) {
@@ -122,9 +158,19 @@ public class MapManager : MonoBehaviour {
 
 		_isMoving = true;
 		Invoke("MoveFinish", MoveTime);
+		
 		_nowTurnCount++;
-		if( _nowTurnCount % 2 == 0 ) {
-			AddEnemy();
+		while(true) {
+			if( _enemyDataList.Count == 0 )
+				break;
+			
+			EnemyData d = _enemyDataList[0];
+			if( d._turn == _nowTurnCount ) {
+				AddEnemy( d._x, d._y, 0, d._type, 2 );
+				_enemyDataList.RemoveAt(0);
+			} else {
+				break;
+			}
 		}
 	}
 
@@ -161,7 +207,7 @@ public class MapManager : MonoBehaviour {
 	}
 
 	public void AddEnemy() {
-
+		// create enemy at random position
 		int x, y, dir;
 		int v = _randomer.NextInt();
 		if( Random.Range(0, 2) == 0 ) {
@@ -181,11 +227,16 @@ public class MapManager : MonoBehaviour {
 		}
 
 		int len = 2;
+		AddEnemy( x, y, dir, 0, len );
+	}
+
+	public void AddEnemy(int x, int y, int dir, int type, int length) {
 		GameObject clone = Instantiate (EnemyPrefab,
 			new Vector3 (0, 1, 0),
 			Quaternion.identity) as GameObject;
+
 		// create child like tail to head
-		for( int i = 1; i < len; i ++ ) {
+		for( int i = 1; i < length; i ++ ) {
 			Vector3 pos = new Vector3(0, 1, 0);
 			switch( dir ) {
 				case MapManager.DIR_LEFT:
@@ -210,7 +261,7 @@ public class MapManager : MonoBehaviour {
 		Missile missile = new Missile(clone,
 			new TileCoordinate(x, y),
 			dir,
-		    len);
+			length);
 		_movableObjects.Add(missile);
 	}
 	
