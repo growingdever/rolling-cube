@@ -31,6 +31,10 @@ public class MapManager : MonoBehaviour {
 	private int _nowTurnCount = 0;
 	private RandomGenerator _randomer;
 
+	public GUIText _labelTimer;
+	public const float TURN_TIMER = 5.0f;
+	private float _turnTimer;
+
 	// Use this for initialization
 	void Start () {
 		_map = new int[MAP_HEIGHT, MAP_WIDTH];
@@ -76,11 +80,17 @@ public class MapManager : MonoBehaviour {
 		_randomer.AddRange( new RandomGenerator.Range(7, 9) );
 
 		ReadMap();
+
+		_turnTimer = TURN_TIMER;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+		_turnTimer -= Time.deltaTime;
+		if (_turnTimer < 0) {
+			MovePlayer(MoveDirection.Stop);
+		}
+		_labelTimer.text = string.Format ("{0:0.00}", _turnTimer);
 	}
 
 	public void ReadMap() {
@@ -153,6 +163,8 @@ public class MapManager : MonoBehaviour {
 		// move player on here
 		GameObject.Find("prefab-player(Clone)").SendMessage("rollSetup", dir);
 
+		_turnTimer = TURN_TIMER;
+
 		_isMoving = true;
 		Invoke("MoveFinish", MoveTime);
 		
@@ -169,7 +181,6 @@ public class MapManager : MonoBehaviour {
 				break;
 			}
 		}
-		Debug.Log (_nowTurnCount + " " + _enemyDataList.Count + " " + _movableObjects.Count);
 	}
 
 	public void MoveFinish() {
