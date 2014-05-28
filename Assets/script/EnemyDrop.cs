@@ -23,7 +23,7 @@ public class EnemyDrop : Enemy, IInitializableEnemy {
 			iTween.MoveTo( _model, 
 				iTween.Hash( 
 				"position", dest, 
-				"time", 0.1f,
+				"time", 0.2f,
 				"easetype", iTween.EaseType.easeInCubic
 			) );
 		}

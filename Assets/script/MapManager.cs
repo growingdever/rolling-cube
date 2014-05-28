@@ -60,14 +60,15 @@ public class MapManager : MonoBehaviour {
 		int i, j;
 		for (i = 0; i < 5; i ++) {
 			for (j = 0; j < 5; j++) {
+				GameObject clone = null;
 				if( (i+j)%2 == 0 ) {
-					GameObject clone = Instantiate (FloorBlock1, 
+					clone = Instantiate (FloorBlock1, 
 					             new Vector3 (i, 0, j), 
 					             Quaternion.identity) as GameObject;
 					clone.transform.localScale.Set( 1.0f, 0.1f, 1.0f );
 				}
 				else {
-					GameObject clone = Instantiate (FloorBlock2, 
+					clone = Instantiate (FloorBlock2, 
 					             new Vector3 (i, 0, j), 
 					             Quaternion.identity) as GameObject;
 					clone.transform.localScale.Set( 1.0f, 0.1f, 1.0f );
