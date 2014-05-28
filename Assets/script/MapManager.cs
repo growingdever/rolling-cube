@@ -229,7 +229,7 @@ public class MapManager : MonoBehaviour {
 	}
 	
 	public void GameOver() {
-		Debug.Log("Game Over");
+		Application.LoadLevel(0);
 	}
 
 	public void AddEnemy(EnemyData data) {
