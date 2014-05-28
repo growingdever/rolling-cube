@@ -102,7 +102,7 @@ public class MapManager : MonoBehaviour {
 	void Update () {
 		_turnTimer -= Time.deltaTime;
 		if (_turnTimer < 0) {
-//			MovePlayer(MoveDirection.Stop);
+			MovePlayer(MoveDirection.Stop);
 		}
 		_labelTimer.text = string.Format ("{0:0.00}", _turnTimer);
 	}
@@ -192,10 +192,10 @@ public class MapManager : MonoBehaviour {
 	}
 
 	public void MoveFinish() {
+		CheckMap();
+
 		_isMoving = false;
-
 		List<Enemy> deleteList = new List<Enemy> ();
-
 		foreach (MovableTileMapObject obj in _movableObjects) {
 			obj.AfterMove(this);
 			if( obj.GetType() == MovableTileMapObject.Type.Enemy ) {
@@ -205,19 +205,17 @@ public class MapManager : MonoBehaviour {
 				}
 			}
 		}
-
 		foreach (Enemy enemy in deleteList) {
 			Destroy( enemy.GetModel() );
 			_movableObjects.Remove( enemy );
 		}
-		CheckMap();
 	}
 	
 	public void CheckMap() {
 		List<TileCoordinate> playerCoord = _player.GetCurrCoordinate();
 		foreach( MovableTileMapObject obj in _movableObjects ) {
 			if( obj.GetType() == MovableTileMapObject.Type.Enemy
-				&& obj.GetCurrCoordinate().Equals( playerCoord ) ) {
+				&& obj.IsIntersectCoordinate(playerCoord) ) {
 				GameOver();
 			}
 		}

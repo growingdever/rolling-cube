@@ -50,6 +50,9 @@ public class EnemyMissile : Enemy, IInitializableEnemy {
 				Quaternion.identity) as GameObject;
 			clone2.transform.parent = _model.transform;
 			clone2.transform.localPosition = pos;
+
+			TileCoordinate coord = new TileCoordinate(_coordList[0]._x + (int)pos.x, _coordList[0]._y + (int)pos.z);
+			_coordList.Add(coord);
 		}
 	}
 }
