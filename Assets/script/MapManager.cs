@@ -96,7 +96,7 @@ public class MapManager : MonoBehaviour {
 				int y = int.Parse( tokens[2] );
 				int type = int.Parse( tokens[3] );
 
-				EnemyData d = new EnemyData( turn, x, y, type );
+				EnemyData d = new EnemyData( turn, x, y, (Enemy.EnemyType)type );
 				_enemyDataList.Add( d );
 			}
 		}
@@ -107,7 +107,7 @@ public class MapManager : MonoBehaviour {
 
 			EnemyData d = _enemyDataList[0];
 			if( d._turn == _nowTurnCount ) {
-				AddEnemy( d._x, d._y, 0, d._type, 2 );
+				AddEnemy( d );
 				_enemyDataList.RemoveAt(0);
 			} else {
 				break;
@@ -153,7 +153,6 @@ public class MapManager : MonoBehaviour {
 			
 			EnemyData d = _enemyDataList[0];
 			if( d._turn == _nowTurnCount ) {
-				AddEnemy( d._x, d._y, 0, d._type, 2 );
 				_enemyDataList.RemoveAt(0);
 			} else {
 				break;
@@ -193,42 +192,8 @@ public class MapManager : MonoBehaviour {
 		Debug.Log("Game Over");
 	}
 
-	public void AddEnemy(int x, int y, MoveDirection dir, int type, int length) {
-		GameObject clone = Instantiate (EnemyPrefab,
-			new Vector3 (0, 1, 0),
-			Quaternion.identity) as GameObject;
-
-		// create child like tail to head
-		for( int i = 1; i < length; i ++ ) {
-			Vector3 pos = new Vector3(0, 1, 0);
-			switch( dir ) {
-				case MoveDirection.Left:
-					pos.x = -i;
-					break;
-				case MoveDirection.Right:
-					pos.x = i;
-					break;
-				case MoveDirection.Top:
-					pos.z = i;
-					break;
-				case MoveDirection.Bottom:
-					pos.z = -i;
-					break;
-			}
-			GameObject clone2 = Instantiate (EnemyPrefab,
-				pos,
-				Quaternion.identity) as GameObject;
-			clone2.transform.parent = clone.transform;
-		}
-
-		// EnemyMissile missile = new EnemyMissile(clone,
-		// 	new TileCoordinate(x, y),
-		// 	dir,
-		// 	length);
-		// _movableObjects.Add(missile);
-		EnemyDrop drop = new EnemyDrop(clone,
-			new TileCoordinate(x, y),
-			2);
-		_movableObjects.Add(drop);
+	public void AddEnemy(EnemyData data) {
+		Enemy enemy = Enemy.EnemyCreate(data, EnemyPrefab);
+		_movableObjects.Add(enemy);
 	}
 }

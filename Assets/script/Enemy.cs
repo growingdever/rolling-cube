@@ -10,9 +10,21 @@ public class Enemy : MovableTileMapObject
 	EnemyType _eType;
 
 	public Enemy(EnemyType type, GameObject gameObject, TileCoordinate coord, MapManager.MoveDirection dir)
-	: base(MovableTileMapObject.Type.Enemy, gameObject, coord, dir) {	
+	: base(MovableTileMapObject.Type.Enemy, coord, dir) {	
 		_moveDir = dir;
-
 		_eType = type;
+	}
+
+	public static Enemy EnemyCreate(EnemyData data, GameObject prefab) {
+		Enemy ret = null;
+		switch(data._type) {
+			case EnemyType.Missile:
+				ret = new EnemyMissile(data, prefab);
+				break;
+			case EnemyType.Drop:
+				ret = new EnemyDrop(data, prefab);
+				break;
+		}
+		return ret;
 	}
 }

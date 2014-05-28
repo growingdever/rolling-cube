@@ -11,14 +11,11 @@ public class MovableTileMapObject {
 	protected MapManager.MoveDirection _moveDir;
 	protected GameObject _model;
 
-	public MovableTileMapObject(Type type, GameObject model, TileCoordinate coord, MapManager.MoveDirection dir)
+	public MovableTileMapObject(Type type, TileCoordinate coord, MapManager.MoveDirection dir)
 		: base() {
 		_type = type;
-		_model = model;
 		_coord = coord;
 		_moveDir = dir;
-
-		_model.transform.position = new Vector3(_coord._x, 1, _coord._y);
 	}
 
 	public Type GetType() {
