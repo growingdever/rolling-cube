@@ -14,7 +14,6 @@ public class MapManager : MonoBehaviour {
 
 	public const int MAP_WIDTH = 5;
 	public const int MAP_HEIGHT = 5;
-	private int[,] _map;
 	private GameObject[,] _tiles;
 
 	private List<EnemyData> _enemyDataList;
@@ -39,8 +38,6 @@ public class MapManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		_map = new int[MAP_HEIGHT, MAP_WIDTH];
-
 		_movableObjects = new List<MovableTileMapObject> ();
 
 		GameObject playerGameObject = Instantiate (PlayerPrefab,
@@ -105,7 +102,7 @@ public class MapManager : MonoBehaviour {
 	void Update () {
 		_turnTimer -= Time.deltaTime;
 		if (_turnTimer < 0) {
-			MovePlayer(MoveDirection.Stop);
+//			MovePlayer(MoveDirection.Stop);
 		}
 		_labelTimer.text = string.Format ("{0:0.00}", _turnTimer);
 	}
@@ -154,15 +151,8 @@ public class MapManager : MonoBehaviour {
 
 	public void MoveTileMapObject() {
 		foreach( MovableTileMapObject obj in _movableObjects ) {
-			TileCoordinate prevCoord = obj.GetCurrCoordinate();
-			if( IsValidCoordinate(prevCoord) )
-				_map[prevCoord._y, prevCoord._x] = 0;
-
-			obj.Move();
-			
-			TileCoordinate currCoord = obj.GetCurrCoordinate();
-			if( IsValidCoordinate(currCoord) )
-				_map[currCoord._y, currCoord._x] = 0;
+//			if( obj.GetType() != MovableTileMapObject.Type.Player )
+				obj.Move();
 		}
 	}
 	
@@ -171,9 +161,10 @@ public class MapManager : MonoBehaviour {
 			return;
 
 		_player.SetDirection(dir);
-		TileCoordinate coord = _player.GetNextCoordinate();
-		if( ! IsValidCoordinate(coord._x, coord._y) )
+		TileCoordinate coord = _player.GetNextCoordinate( _player.GetCurrCoordinate()[0] );
+		if (! IsValidCoordinate (coord._x, coord._y)) {
 			return;
+		}
 
 		MoveTileMapObject();
 
@@ -223,10 +214,10 @@ public class MapManager : MonoBehaviour {
 	}
 	
 	public void CheckMap() {
-		TileCoordinate playerCoord = _player.GetCurrCoordinate();
+		List<TileCoordinate> playerCoord = _player.GetCurrCoordinate();
 		foreach( MovableTileMapObject obj in _movableObjects ) {
 			if( obj.GetType() == MovableTileMapObject.Type.Enemy
-				&& obj.GetCurrCoordinate().equal( playerCoord ) ) {
+				&& obj.GetCurrCoordinate().Equals( playerCoord ) ) {
 				GameOver();
 			}
 		}

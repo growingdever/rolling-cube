@@ -13,7 +13,7 @@ public class EnemyMissile : Enemy, IInitializableEnemy {
 	override public void Move() {
 		base.Move();
 
-		Vector3 dest = new Vector3(_coord._x, 1, _coord._y);
+		Vector3 dest = new Vector3(_coordList[0]._x, 1, _coordList[0]._y);
 		iTween.MoveTo( _model, 
 			iTween.Hash( 
 			"position", dest, 

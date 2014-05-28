@@ -20,7 +20,7 @@ public class EnemyDrop : Enemy, IInitializableEnemy {
 			color.a = 1.0f;
 			_model.renderer.material.color = color;
 
-			Vector3 dest = new Vector3(_coord._x, 1, _coord._y);
+			Vector3 dest = new Vector3(_coordList[0]._x, 1, _coordList[0]._y);
 			iTween.MoveTo( _model, 
 				iTween.Hash( 
 				"position", dest, 
@@ -57,7 +57,7 @@ public class EnemyDrop : Enemy, IInitializableEnemy {
 		base.AfterMove (manager);
 
 		if( _count > 0 )
-			manager.Twinkle (_coord);
+			manager.Twinkle (_coordList[0]);
 
 		if (_count <= 0) {
 			_alive = false;

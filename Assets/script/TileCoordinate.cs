@@ -14,9 +14,22 @@ public class TileCoordinate {
         _y = coord._y;
     }
 
-    public bool equal(TileCoordinate coord) {
-    	if( this._x == coord._x && this._y == coord._y ) 
-    		return true;
-    	return false;
+    public override bool Equals(System.Object obj) {
+    	if (obj == null)
+			return false;
+
+		TileCoordinate coord = obj as TileCoordinate;
+		return this.Equals (coord);
     }
+
+	public bool Equals(TileCoordinate coord) {
+		if (coord == null)
+			return false;
+		return this._x == coord._x && this._y == coord._y;
+	}
+
+	public override int GetHashCode()
+	{
+		return _x ^ _y;
+	}
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MovableTileMapObject {
 	public enum Type {
@@ -7,14 +8,15 @@ public class MovableTileMapObject {
 		Enemy
 	};
 	private Type _type;
-	protected TileCoordinate _coord;
+	protected List<TileCoordinate> _coordList;
 	protected MapManager.MoveDirection _moveDir;
 	protected GameObject _model;
 
 	public MovableTileMapObject(Type type, TileCoordinate coord, MapManager.MoveDirection dir)
 		: base() {
 		_type = type;
-		_coord = coord;
+		_coordList = new List<TileCoordinate> ();
+		_coordList.Add(coord);
 		_moveDir = dir;
 	}
 
@@ -27,19 +29,10 @@ public class MovableTileMapObject {
 	}
 
 	public virtual void Move() {
-		switch( _moveDir ) {
-			case MapManager.MoveDirection.Left:
-				_coord._x -= 1;
-				break;
-			case MapManager.MoveDirection.Top:
-				_coord._y -= 1;
-				break;
-			case MapManager.MoveDirection.Right:
-				_coord._x += 1;
-				break;
-			case MapManager.MoveDirection.Bottom:
-				_coord._y += 1;
-				break;
+		for( int i = 0; i < _coordList.Count; i ++ ) {
+			TileCoordinate next = GetNextCoordinate( _coordList[i] );
+			_coordList[i]._x = next._x;
+			_coordList[i]._y = next._y;
 		}
 	}
 
@@ -47,31 +40,37 @@ public class MovableTileMapObject {
 
 	}
 
-	public TileCoordinate GetCurrCoordinate() {
-		return _coord;
+	public List<TileCoordinate> GetCurrCoordinate() {
+		return _coordList;
 	}
-
-	public void SetCoordinate(TileCoordinate coord) {
-		_coord = coord;
-	}
-
-	public TileCoordinate GetNextCoordinate() {
-		TileCoordinate coord = new TileCoordinate(_coord);
+	
+	public TileCoordinate GetNextCoordinate(TileCoordinate coord) {
+		TileCoordinate ret = new TileCoordinate (coord);
 		switch( _moveDir ) {
-			case MapManager.MoveDirection.Left:
-				coord._x -= 1;
-				break;
-			case MapManager.MoveDirection.Top:
-				coord._y -= 1;
-				break;
-			case MapManager.MoveDirection.Right:
-				coord._x += 1;
-				break;
-			case MapManager.MoveDirection.Bottom:
-				coord._y += 1;
-				break;
+		case MapManager.MoveDirection.Left:
+			ret._x -= 1;
+			break;
+		case MapManager.MoveDirection.Top:
+			ret._y -= 1;
+			break;
+		case MapManager.MoveDirection.Right:
+			ret._x += 1;
+			break;
+		case MapManager.MoveDirection.Bottom:
+			ret._y += 1;
+			break;
 		}
+		
+		return ret;
+	}
 
-		return coord;
+	public bool IsIntersectCoordinate(List<TileCoordinate> list) {
+		foreach( TileCoordinate c1 in _coordList ) {
+			foreach( TileCoordinate c2 in list ) {
+				if( c1.Equals( c2 ) )
+					return true;
+			}
+		}
+		return false;
 	}
 }
