@@ -33,7 +33,6 @@ public class EnemyMissile : Enemy, IInitializableEnemy {
 			Quaternion.identity) as GameObject;
 
 		// create child like tail to head
-		data._length = 2;
 		for( int i = 1; i < data._length; i ++ ) {
 			Vector3 pos = new Vector3(0, 0, 0);
 			switch( data._dir ) {

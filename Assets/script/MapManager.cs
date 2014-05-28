@@ -94,9 +94,21 @@ public class MapManager : MonoBehaviour {
 				int turn = int.Parse( tokens[0] );
 				int x = int.Parse( tokens[1] );
 				int y = int.Parse( tokens[2] );
-				int type = int.Parse( tokens[3] );
+				Enemy.EnemyType type = (Enemy.EnemyType)int.Parse( tokens[3] );
 
-				EnemyData d = new EnemyData( turn, x, y, (Enemy.EnemyType)type );
+				EnemyData d = null;
+				switch( type ) {
+					case Enemy.EnemyType.Missile:
+						d = new EnemyData( turn, x, y, (Enemy.EnemyType)type );
+						d._dir = (MoveDirection)int.Parse( tokens[4] );
+						d._length = int.Parse( tokens[5] );
+						break;
+					case Enemy.EnemyType.Drop:
+						d = new EnemyData( turn, x, y, (Enemy.EnemyType)type );
+						d._wait = int.Parse( tokens[4] );
+						break;
+				}
+				
 				_enemyDataList.Add( d );
 			}
 		}
