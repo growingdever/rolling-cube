@@ -7,7 +7,8 @@ public class Enemy : MovableTileMapObject
 		Drop,
 	};
 
-	EnemyType _eType;
+	protected EnemyType _eType;
+	protected bool _alive = true;
 
 	public Enemy(EnemyType type, GameObject gameObject, TileCoordinate coord, MapManager.MoveDirection dir)
 	: base(MovableTileMapObject.Type.Enemy, coord, dir) {	
@@ -26,5 +27,9 @@ public class Enemy : MovableTileMapObject
 				break;
 		}
 		return ret;
+	}
+
+	public bool IsDead() {
+		return ! _alive;
 	}
 }

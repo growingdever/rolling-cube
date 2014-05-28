@@ -43,6 +43,10 @@ public class MovableTileMapObject {
 		}
 	}
 
+	public virtual void AfterMove () {
+
+	}
+
 	public TileCoordinate GetCurrCoordinate() {
 		return _coord;
 	}

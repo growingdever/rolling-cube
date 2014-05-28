@@ -96,15 +96,13 @@ public class MapManager : MonoBehaviour {
 				int y = int.Parse( tokens[2] );
 				Enemy.EnemyType type = (Enemy.EnemyType)int.Parse( tokens[3] );
 
-				EnemyData d = null;
+				EnemyData d = new EnemyData( turn, x, y, (Enemy.EnemyType)type );
 				switch( type ) {
 					case Enemy.EnemyType.Missile:
-						d = new EnemyData( turn, x, y, (Enemy.EnemyType)type );
 						d._dir = (MoveDirection)int.Parse( tokens[4] );
 						d._length = int.Parse( tokens[5] );
 						break;
 					case Enemy.EnemyType.Drop:
-						d = new EnemyData( turn, x, y, (Enemy.EnemyType)type );
 						d._wait = int.Parse( tokens[4] );
 						break;
 				}
@@ -165,15 +163,34 @@ public class MapManager : MonoBehaviour {
 			
 			EnemyData d = _enemyDataList[0];
 			if( d._turn == _nowTurnCount ) {
+				AddEnemy( d );
 				_enemyDataList.RemoveAt(0);
 			} else {
 				break;
 			}
 		}
+		Debug.Log (_nowTurnCount + " " + _enemyDataList.Count + " " + _movableObjects.Count);
 	}
 
 	public void MoveFinish() {
 		_isMoving = false;
+
+		List<Enemy> deleteList = new List<Enemy> ();
+
+		foreach (MovableTileMapObject obj in _movableObjects) {
+			obj.AfterMove();
+			if( obj.GetType() == MovableTileMapObject.Type.Enemy ) {
+				Enemy enemy = obj as Enemy;
+				if( enemy.IsDead() ) {
+					deleteList.Add( enemy );
+				}
+			}
+		}
+
+		foreach (Enemy enemy in deleteList) {
+			Destroy( enemy.GetModel() );
+			_movableObjects.Remove( enemy );
+		}
 		CheckMap();
 	}
 	

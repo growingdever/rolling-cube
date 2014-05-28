@@ -5,11 +5,6 @@ public class EnemyDrop : Enemy, IInitializableEnemy {
 
 	private int _count;
 
-	public EnemyDrop(GameObject gameObject, TileCoordinate coord, int count)
-		: base(EnemyType.Drop, gameObject, coord, MapManager.MoveDirection.Stop) {
-		_count = count;
-	}
-
 	public EnemyDrop(EnemyData data, GameObject prefab)
 		: base(EnemyType.Drop, prefab, new TileCoordinate( data._x, data._y ), MapManager.MoveDirection.Stop ) {
 		Init (data, prefab);
@@ -39,6 +34,8 @@ public class EnemyDrop : Enemy, IInitializableEnemy {
 			new Vector3 (data._x, 1, data._y),
 			Quaternion.identity) as GameObject;
 
+		_count = data._wait;
+
 		// set alpha is not working....
 		foreach (Material material in _model.renderer.materials) {	
 			material.color = new Color(
@@ -53,5 +50,13 @@ public class EnemyDrop : Enemy, IInitializableEnemy {
 			_model.transform.position.z);
 		pos.y = 10;
 		_model.transform.position = pos;
+	}
+
+	override public void AfterMove() {
+		base.AfterMove ();
+
+		if (_count <= 0) {
+			_alive = false;
+		}
 	}
 }

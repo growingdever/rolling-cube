@@ -5,11 +5,6 @@ public class EnemyMissile : Enemy, IInitializableEnemy {
 
 	protected int _length;
 
-	public EnemyMissile(GameObject gameObject, TileCoordinate coord, MapManager.MoveDirection dir, int length)
-		: base(EnemyType.Missile, gameObject, coord, dir) {
-		_length = length;
-	}
-
 	public EnemyMissile(EnemyData data, GameObject prefab)
 		: base(EnemyType.Missile, prefab, new TileCoordinate( data._x, data._y ), data._dir ) {
 		Init (data, prefab);
@@ -33,7 +28,8 @@ public class EnemyMissile : Enemy, IInitializableEnemy {
 			Quaternion.identity) as GameObject;
 
 		// create child like tail to head
-		for( int i = 1; i < data._length; i ++ ) {
+		_length = data._length;
+		for( int i = 1; i < _length; i ++ ) {
 			Vector3 pos = new Vector3(0, 0, 0);
 			switch( data._dir ) {
 			case MapManager.MoveDirection.Left:
