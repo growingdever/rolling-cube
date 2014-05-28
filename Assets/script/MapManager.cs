@@ -25,6 +25,7 @@ public class MapManager : MonoBehaviour {
 	public GameObject EnemyPrefab;
 	public GameObject FloorBlock1;
 	public GameObject FloorBlock2;
+	public GameObject FloorBlock3;
 
 	public const float MoveTime = 0.5f;
 	private bool _isMoving = false;
@@ -58,20 +59,32 @@ public class MapManager : MonoBehaviour {
 
 		// Generate floor blocks
 		int i, j;
-		for (i = 0; i < 5; i ++) {
-			for (j = 0; j < 5; j++) {
+		for (i = -10; i <= 10; i ++) {
+			for (j = -10; j <= 10; j++) {
+
 				GameObject clone = null;
-				if( (i+j)%2 == 0 ) {
-					clone = Instantiate (FloorBlock1, 
-					             new Vector3 (i, 0, j), 
-					             Quaternion.identity) as GameObject;
-					clone.transform.localScale.Set( 1.0f, 0.1f, 1.0f );
-				}
+
+				if( 0 <= i && i < MAP_HEIGHT
+					&& 0 <= j && j < MAP_WIDTH ) {
+					if( (i+j)%2 == 0 ) {
+						clone = Instantiate (FloorBlock1, 
+							new Vector3 (i, 0, j), 
+							Quaternion.identity) as GameObject;
+						clone.transform.localScale.Set( 1.0f, 0.1f, 1.0f );
+					}
+					else {
+						clone = Instantiate (FloorBlock1, 
+							new Vector3 (i, 0, j), 
+							Quaternion.identity) as GameObject;
+						clone.transform.localScale.Set( 1.0f, 0.1f, 1.0f );
+					}
+				} 
 				else {
-					clone = Instantiate (FloorBlock2, 
-					             new Vector3 (i, 0, j), 
-					             Quaternion.identity) as GameObject;
-					clone.transform.localScale.Set( 1.0f, 0.1f, 1.0f );
+					clone = Instantiate (FloorBlock3, 
+							new Vector3 (i, 0, j), 
+							Quaternion.identity) as GameObject;
+						clone.transform.localScale.Set( 1.0f, 0.1f, 1.0f );
+					clone.transform.Translate( new Vector3(0, -0.3f, 0) );
 				}
 			}
 		}
