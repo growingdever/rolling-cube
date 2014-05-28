@@ -43,7 +43,7 @@ public class MovableTileMapObject {
 		}
 	}
 
-	public virtual void AfterMove () {
+	public virtual void AfterMove (MapManager manager) {
 
 	}
 

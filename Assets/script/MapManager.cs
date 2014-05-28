@@ -15,6 +15,7 @@ public class MapManager : MonoBehaviour {
 	public const int MAP_WIDTH = 5;
 	public const int MAP_HEIGHT = 5;
 	private int[,] _map;
+	private GameObject[,] _tiles;
 
 	private List<EnemyData> _enemyDataList;
 
@@ -59,6 +60,7 @@ public class MapManager : MonoBehaviour {
 
 		// Generate floor blocks
 		int i, j;
+		_tiles = new GameObject[MAP_HEIGHT, MAP_WIDTH];
 		for (i = -10; i <= 10; i ++) {
 			for (j = -10; j <= 10; j++) {
 
@@ -78,6 +80,7 @@ public class MapManager : MonoBehaviour {
 							Quaternion.identity) as GameObject;
 						clone.transform.localScale.Set( 1.0f, 0.1f, 1.0f );
 					}
+					_tiles[i, j]=  clone;
 				} 
 				else {
 					clone = Instantiate (FloorBlock3, 
@@ -203,7 +206,7 @@ public class MapManager : MonoBehaviour {
 		List<Enemy> deleteList = new List<Enemy> ();
 
 		foreach (MovableTileMapObject obj in _movableObjects) {
-			obj.AfterMove();
+			obj.AfterMove(this);
 			if( obj.GetType() == MovableTileMapObject.Type.Enemy ) {
 				Enemy enemy = obj as Enemy;
 				if( enemy.IsDead() ) {
@@ -249,5 +252,20 @@ public class MapManager : MonoBehaviour {
 	public void AddEnemy(EnemyData data) {
 		Enemy enemy = Enemy.EnemyCreate(data, EnemyPrefab);
 		_movableObjects.Add(enemy);
+	}
+
+	public void Twinkle(TileCoordinate coord) {
+		if( IsValidCoordinate( coord ) )
+			StartCoroutine ("TwinkleTile", coord);
+	}
+
+	public IEnumerator TwinkleTile(TileCoordinate coord) {
+		GameObject target = _tiles [coord._y, coord._x];
+		Material originMat = target.renderer.material;
+		Material newMat = Resources.Load ("mat-warning") as Material;
+
+		target.renderer.material = newMat;
+		yield return new WaitForSeconds(0.5f);
+		target.renderer.material = originMat;
 	}
 }

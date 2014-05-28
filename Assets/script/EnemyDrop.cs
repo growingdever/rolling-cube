@@ -4,6 +4,7 @@ using System.Collections;
 public class EnemyDrop : Enemy, IInitializableEnemy {
 
 	private int _count;
+	private GameObject _effect;
 
 	public EnemyDrop(EnemyData data, GameObject prefab)
 		: base(EnemyType.Drop, prefab, new TileCoordinate( data._x, data._y ), MapManager.MoveDirection.Stop ) {
@@ -52,8 +53,11 @@ public class EnemyDrop : Enemy, IInitializableEnemy {
 		_model.transform.position = pos;
 	}
 
-	override public void AfterMove() {
-		base.AfterMove ();
+	override public void AfterMove(MapManager manager) {
+		base.AfterMove (manager);
+
+		if( _count > 0 )
+			manager.Twinkle (_coord);
 
 		if (_count <= 0) {
 			_alive = false;
