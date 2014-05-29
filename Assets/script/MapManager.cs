@@ -106,6 +106,7 @@ public class MapManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		menuGUI.SendMessage("setTimeBar", _turnTimer);		
 		_turnTimer -= Time.deltaTime;
 		if (_turnTimer < 0) {
 			MovePlayer(MoveDirection.Stop);
