@@ -73,4 +73,11 @@ public class MovableTileMapObject {
 		}
 		return false;
 	}
+	public bool IsIntersectCoordinate(TileCoordinate coord) {
+		foreach( TileCoordinate c1 in _coordList ) {
+			if( c1.Equals( coord ) )
+				return true;
+		}
+		return false;
+	}
 }

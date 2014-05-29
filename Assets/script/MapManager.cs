@@ -36,6 +36,7 @@ public class MapManager : MonoBehaviour {
 	public static readonly int[] TotalTurn = { 35, 50 };
 	public const float TURN_TIMER = 5.0f;
 	private float _turnTimer;
+	public GUIText _labelTurn;
 
 	public GameObject soundmanager;
 	public GameObject menuGUI;
@@ -44,6 +45,8 @@ public class MapManager : MonoBehaviour {
 	void Start () {
 		GameManager gameManager = GameObject.Find ("GameManager").GetComponent("GameManager") as GameManager;
 		CurrentLevel = gameManager.GetLevel();
+		if( CurrentLevel >= TotalTurn.Length )
+			CurrentLevel = TotalTurn.Length - 1;
 		Debug.Log ("Level : " + CurrentLevel);
 
 		_movableObjects = new List<MovableTileMapObject> ();
@@ -104,6 +107,7 @@ public class MapManager : MonoBehaviour {
 		ReadMap();
 
 		_turnTimer = TURN_TIMER;
+		_labelTurn.text = "" + _nowTurnCount;
 
 		soundmanager = GameObject.Find("SoundManager");
 		menuGUI = GameObject.Find("guiScript");
@@ -119,7 +123,7 @@ public class MapManager : MonoBehaviour {
 	}
 
 	public void ReadMap() {
-		TextAsset data = Resources.Load("data") as TextAsset;
+		TextAsset data = Resources.Load("data" + CurrentLevel) as TextAsset;
 		string content = data.text;
 		using( StringReader reader = new StringReader( content ) ) {
 			_enemyDataList = new List<EnemyData>();
@@ -189,6 +193,7 @@ public class MapManager : MonoBehaviour {
 		Invoke("MoveFinish", MoveTime);
 		
 		_nowTurnCount++;
+		_labelTurn.text = "" + _nowTurnCount;
 		while(true) {
 			if( _enemyDataList.Count == 0 )
 				break;
@@ -238,6 +243,7 @@ public class MapManager : MonoBehaviour {
 						continue;
 				}
 				GameOver();
+				return;
 			}
 		}
 	}
