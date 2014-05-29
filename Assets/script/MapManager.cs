@@ -36,6 +36,9 @@ public class MapManager : MonoBehaviour {
 	public const float TURN_TIMER = 5.0f;
 	private float _turnTimer;
 
+	public GameObject soundmanager;
+	public GameObject menuGUI;
+
 	// Use this for initialization
 	void Start () {
 		_movableObjects = new List<MovableTileMapObject> ();
@@ -96,6 +99,9 @@ public class MapManager : MonoBehaviour {
 		ReadMap();
 
 		_turnTimer = TURN_TIMER;
+
+		soundmanager = GameObject.Find("SoundManager");
+		menuGUI = GameObject.Find("guiScript");
 	}
 	
 	// Update is called once per frame
@@ -170,6 +176,7 @@ public class MapManager : MonoBehaviour {
 
 		// move player on here
 		GameObject.Find("prefab-player(Clone)").SendMessage("rollSetup", dir);
+		soundmanager.SendMessage("roll");
 
 		_turnTimer = TURN_TIMER;
 
@@ -241,7 +248,9 @@ public class MapManager : MonoBehaviour {
 	}
 	
 	public void GameOver() {
-		Application.LoadLevel(0);
+		soundmanager.SendMessage("dead");
+		menuGUI.SendMessage("gameover", _nowTurnCount);
+		// Application.LoadLevel(0);
 	}
 
 	public void AddEnemy(EnemyData data) {
