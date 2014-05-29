@@ -116,7 +116,7 @@ GUI.skin = customSkin;
 		}
 		if(GUI.Button(Rect(Screen.width - btn_w*1.1, Screen.height - btn_h*2.2,btn_w,btn_h*2.1),btn_nomove)){
 			//턴 넘김
-			//mainCamera.SendMessage("MovePlayer", 4);
+			mainCamera.SendMessage("MovePlayer", 4);
 		}
 		
 		if(GUI.Button(Rect(Screen.width - btn_w*1.1, btn_h*0.1, btn_w,btn_h),btn_option)){
@@ -170,7 +170,7 @@ GUI.skin = customSkin;
 		} else {
 		//스테이지 클리어
 			GUI.Box(Rect(Screen.width/2 - 150,Screen.height/2 - 150,300,300),"Stage Clear!");
-			if(GUI.Button(Rect(Screen.width/2 - 75,Screen.height/2 +70,150,50),"Next Stage")) {
+			if(GUI.Button(Rect(Screen.width/2 - 75,Screen.height/2 - 50,150,50),"Next Stage")) {
 				isclear = false;
 				Application.LoadLevel(Application.loadedLevel+1);
 				paused = false;
@@ -215,13 +215,13 @@ GUI.skin = customSkin;
 	}
 }
 
-function gameover(_count){
+function gameover(_count : int){
 	count = _count;
 	paused = true;
 	isgameover = true;
 }
 
-function gameclear(_count){
+function gameclear(_count : int){
 	count = _count;
 	paused = true;
 	isclear = true;

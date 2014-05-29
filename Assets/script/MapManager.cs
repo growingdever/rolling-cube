@@ -32,7 +32,8 @@ public class MapManager : MonoBehaviour {
 	private int _nowTurnCount = 0;
 	private RandomGenerator _randomer;
 
-	public GUIText _labelTimer;
+	public int CurrentLevel = 0;
+	public static readonly int[] TotalTurn = { 35, 50 };
 	public const float TURN_TIMER = 5.0f;
 	private float _turnTimer;
 
@@ -41,6 +42,10 @@ public class MapManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		GameManager gameManager = GameObject.Find ("GameManager").GetComponent("GameManager") as GameManager;
+		CurrentLevel = gameManager.GetLevel();
+		Debug.Log ("Level : " + CurrentLevel);
+
 		_movableObjects = new List<MovableTileMapObject> ();
 
 		GameObject playerGameObject = Instantiate (PlayerPrefab,
@@ -111,7 +116,6 @@ public class MapManager : MonoBehaviour {
 		if (_turnTimer < 0) {
 			MovePlayer(MoveDirection.Stop);
 		}
-		_labelTimer.text = string.Format ("{0:0.00}", _turnTimer);
 	}
 
 	public void ReadMap() {
@@ -217,6 +221,9 @@ public class MapManager : MonoBehaviour {
 			Destroy( enemy.GetModel() );
 			_movableObjects.Remove( enemy );
 		}
+
+		if( _nowTurnCount >= TotalTurn[CurrentLevel] )
+			menuGUI.SendMessage("gameclear", _nowTurnCount);
 	}
 	
 	public void CheckMap() {

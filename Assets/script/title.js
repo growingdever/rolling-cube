@@ -57,6 +57,7 @@ GUI.skin = customSkin;
 			Debug.Log("이지");
 			//게임 시작 클릭
 			soundmanager.SendMessage("click");
+			GameObject.Find("GameManager").SendMessage("SetLevel", 0);
 			Application.LoadLevel(1);
 			choosemenu = false;
 		}
@@ -64,14 +65,16 @@ GUI.skin = customSkin;
 			Debug.Log("노멀");
 			//게임 시작 클릭
 			soundmanager.SendMessage("click");
-			//Application.LoadLevel(1);
+			GameObject.Find("GameManager").SendMessage("SetLevel", 1);
+			Application.LoadLevel(1);
 			choosemenu = false;
 		}
 		if(GUI.Button(Rect((Screen.width-btn_w) / 2,((Screen.height-btn_h) / 2) * 1.5 - btn_h* 2.2,btn_w,btn_h), "Hard")){
 			Debug.Log("하드");
 			//게임 시작 클릭
 			soundmanager.SendMessage("click");
-			//Application.LoadLevel(1);
+			GameObject.Find("GameManager").SendMessage("SetLevel", 2);
+			Application.LoadLevel(1);
 			choosemenu = false;
 		}
 		if(GUI.Button(Rect((Screen.width-btn_w) / 2,((Screen.height-btn_h) / 2) * 1.5,btn_w,btn_h), "Back")){
