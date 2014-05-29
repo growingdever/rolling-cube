@@ -29,6 +29,10 @@ public class Enemy : MovableTileMapObject
 		return ret;
 	}
 
+	public EnemyType GetEnemyType() {
+		return _eType;
+	}
+
 	public bool IsDead() {
 		return ! _alive;
 	}

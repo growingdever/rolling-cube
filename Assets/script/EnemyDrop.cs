@@ -63,4 +63,8 @@ public class EnemyDrop : Enemy, IInitializableEnemy {
 			_alive = false;
 		}
 	}
+
+	public bool IsWaiting() {
+		return _count > 0;
+	}
 }

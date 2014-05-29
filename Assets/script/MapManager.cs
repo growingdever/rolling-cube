@@ -216,6 +216,12 @@ public class MapManager : MonoBehaviour {
 		foreach( MovableTileMapObject obj in _movableObjects ) {
 			if( obj.GetType() == MovableTileMapObject.Type.Enemy
 				&& obj.IsIntersectCoordinate(playerCoord) ) {
+				Enemy enemy = obj as Enemy;
+				if( enemy.GetEnemyType() == Enemy.EnemyType.Drop ) {
+					EnemyDrop drop = enemy as EnemyDrop;
+					if( drop.IsWaiting() )
+						continue;
+				}
 				GameOver();
 			}
 		}
@@ -249,7 +255,7 @@ public class MapManager : MonoBehaviour {
 	}
 
 	public IEnumerator TwinkleTile(TileCoordinate coord) {
-		GameObject target = _tiles [coord._y, coord._x];
+		GameObject target = _tiles [coord._x, coord._y];
 		Material originMat = target.renderer.material;
 		Material newMat = Resources.Load ("mat-warning") as Material;
 
